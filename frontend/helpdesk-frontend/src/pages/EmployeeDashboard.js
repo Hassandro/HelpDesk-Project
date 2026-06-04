@@ -18,12 +18,12 @@ function EmployeeDashboard() {
   };
 
   const fetchTickets = async () => {
-    const res = await axios.get(`http://localhost/helpdesk/api/tickets.php?assignedTo=${user.id}`);
+    const res = await axios.get(`http://localhost/api/tickets.php?assignedTo=${user.id}`);
     if (res.data.success) setTickets(res.data.tickets);
   };
 
   const fetchComments = async (ticketID) => {
-    const res = await axios.get(`http://localhost/helpdesk/api/comments.php?ticketID=${ticketID}`);
+    const res = await axios.get(`http://localhost/api/comments.php?ticketID=${ticketID}`);
     if (res.data.success) setComments(res.data.comments);
   };
 
@@ -35,7 +35,7 @@ function EmployeeDashboard() {
   };
 
   const updateStatus = async (ticketID, statusID) => {
-    const res = await axios.patch('http://localhost/helpdesk/api/tickets.php', {
+    const res = await axios.patch('http://localhost/api/tickets.php', {
       action: 'status', ticketID, statusID
     });
     if (res.data.success) {
@@ -46,7 +46,7 @@ function EmployeeDashboard() {
   };
 
     const failTicket = async (ticketID) => {
-        const res = await axios.patch('http://localhost/helpdesk/api/tickets.php', {
+        const res = await axios.patch('http://localhost/api/tickets.php', {
             action: 'failed', ticketID
         });
         if (res.data.success) {
@@ -57,7 +57,7 @@ function EmployeeDashboard() {
     };
   const addComment = async (e) => {
     e.preventDefault();
-    const res = await axios.post('http://localhost/helpdesk/api/comments.php', {
+    const res = await axios.post('http://localhost/api/comments.php', {
       ticketID: selectedTicket.ID,
       userID: user.id,
       commentText

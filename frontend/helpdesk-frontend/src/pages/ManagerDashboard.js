@@ -16,12 +16,12 @@ function ManagerDashboard() {
   };
 
   const fetchTickets = async () => {
-    const res = await axios.get('http://localhost/helpdesk/api/tickets.php?all=1');
+    const res = await axios.get('http://localhost/api/tickets.php?all=1');
     if (res.data.success) setTickets(res.data.tickets);
   };
 
   const fetchEmployees = async () => {
-    const res = await axios.get('http://localhost/helpdesk/api/users.php?role=employee');
+    const res = await axios.get('http://localhost/api/users.php?role=employee');
     if (res.data.success) setEmployees(res.data.users);
   };
 
@@ -32,7 +32,7 @@ function ManagerDashboard() {
 
   const assignTicket = async (ticketID, employeeID) => {
     if (!employeeID) return alert('Please select an employee');
-    const res = await axios.patch('http://localhost/helpdesk/api/tickets.php', {
+    const res = await axios.patch('http://localhost/api/tickets.php', {
       action: 'assign', ticketID, employeeID
     });
     if (res.data.success) {
@@ -42,7 +42,7 @@ function ManagerDashboard() {
   };
 
   const closeTicket = async (ticketID) => {
-    const res = await axios.patch('http://localhost/helpdesk/api/tickets.php', {
+    const res = await axios.patch('http://localhost/api/tickets.php', {
       action: 'close', ticketID
     });
     if (res.data.success) {

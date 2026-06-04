@@ -11,7 +11,7 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost/helpdesk/api/login.php', {
+      const res = await axios.post('http://localhost/api/login.php', {
         email,
         password
       });

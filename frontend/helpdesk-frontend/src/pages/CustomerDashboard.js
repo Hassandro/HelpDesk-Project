@@ -20,7 +20,7 @@ function CustomerDashboard() {
   };
 
   const fetchTickets = async () => {
-    const res = await axios.get(`http://localhost/helpdesk/api/tickets.php?userID=${user.id}`);
+    const res = await axios.get(`http://localhost/api/tickets.php?userID=${user.id}`);
     if (res.data.success) setTickets(res.data.tickets);
   };
 
@@ -30,7 +30,7 @@ function CustomerDashboard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post('http://localhost/helpdesk/api/tickets.php', {
+    const res = await axios.post('http://localhost/api/tickets.php', {
       title, description, categoryID, priorityID, createdBy: user.id
     });
     if (res.data.success) {
