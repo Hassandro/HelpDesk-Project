@@ -1,6 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: http://localhost:3000");
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PATCH");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PATCH, PUT, DELETE");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
@@ -60,9 +60,11 @@ if ($method === 'GET') {
                   JOIN Statuses s   ON t.StatusID   = s.ID
                   JOIN Users u      ON t.CreatedBy  = u.ID
                   WHERE t.AssignedTo = '$assignedTo'
+                  AND t.StatusID = 2
                   ORDER BY t.CreatedAt DESC";
     } else {
         $query = "SELECT t.ID, t.Title, t.Description, t.CreatedAt,
+                         t.CategoryID, t.PriorityID,
                          c.CategoryName, p.PriorityName, s.StatusName
                   FROM Tickets t
                   JOIN Categories c ON t.CategoryID = c.ID
@@ -78,6 +80,41 @@ if ($method === 'GET') {
         $tickets[] = $row;
     }
     echo json_encode(["success" => true, "tickets" => $tickets]);
+}
+
+// EDIT TICKET (customer can edit their own open tickets)
+if ($method === 'PUT') {
+    $ticketID    = $data['ticketID'];
+    $title       = $data['title'];
+    $description = $data['description'];
+    $categoryID  = $data['categoryID'];
+    $priorityID  = $data['priorityID'];
+
+    $query = "UPDATE Tickets
+              SET Title='$title', Description='$description',
+                  CategoryID='$categoryID', PriorityID='$priorityID'
+              WHERE ID='$ticketID'";
+
+    if (mysqli_query($conn, $query)) {
+        echo json_encode(["success" => true, "message" => "Ticket updated"]);
+    } else {
+        echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+    }
+    exit();
+}
+
+// DELETE TICKET
+if ($method === 'DELETE') {
+    $ticketID = $data['ticketID'];
+
+    $query = "DELETE FROM Tickets WHERE ID='$ticketID'";
+
+    if (mysqli_query($conn, $query)) {
+        echo json_encode(["success" => true, "message" => "Ticket deleted"]);
+    } else {
+        echo json_encode(["success" => false, "message" => mysqli_error($conn)]);
+    }
+    exit();
 }
 
 // ASSIGN, CLOSE, OR UPDATE STATUS
