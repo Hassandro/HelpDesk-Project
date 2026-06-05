@@ -32,14 +32,19 @@ HelpDesk-Project/
 │   │   └── comments.php
 │   └── config/
 │       └── db.php
-└── frontend/
-    └── src/
-        └── pages/
-            ├── Login.js
-            ├── AdminDashboard.js
-            ├── ManagerDashboard.js
-            ├── EmployeeDashboard.js
-            └── CustomerDashboard.js
+├── frontend/
+│   └── src/
+│       └── pages/
+│           ├── Login.js
+│           ├── AdminDashboard.js
+│           ├── ManagerDashboard.js
+│           ├── EmployeeDashboard.js
+│           └── CustomerDashboard.js
+└── mysql/
+    └── data/
+        ├── helpdesk/        ← your database tables
+        ├── mysql/
+        └── performance_schema/
 ```
 
 ## Setup
@@ -48,12 +53,18 @@ HelpDesk-Project/
 - XAMPP (Apache + MySQL)
 - Node.js
 
-### Backend
-1. Start Apache and MySQL from the XAMPP Control Panel
-2. Import the database into MySQL (database name: `helpdesk`)
-3. Place the `backend/` folder so it's served by Apache (configured via `httpd.conf`)
+### 1. Database
+Copy the `mysql/data/` folder into your XAMPP MySQL data directory (e.g. `C:/xampp/mysql/data/`) — or point XAMPP's `my.ini` `datadir` to this folder directly.
 
-### Frontend
+### 2. Apache
+In `C:/xampp/apache/conf/httpd.conf`, set the `DocumentRoot` to the `backend/` folder:
+```
+DocumentRoot "path/to/HelpDesk-Project/backend"
+<Directory "path/to/HelpDesk-Project/backend">
+```
+Then start Apache and MySQL from the XAMPP Control Panel.
+
+### 3. Frontend
 ```bash
 cd frontend
 npm install
