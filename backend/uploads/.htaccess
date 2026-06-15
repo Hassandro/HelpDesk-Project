@@ -1,0 +1,7 @@
+# Uploaded files are served only through attachments.php (readfile).
+# Disable any script execution here so a malicious upload can't be run.
+php_flag engine off
+AddType application/octet-stream .php .phtml .phtml5 .php5 .php7 .pht .cgi .pl .asp .aspx .sh
+<FilesMatch "\.(php|phtml|phtml5|php5|php7|pht|cgi|pl|asp|aspx|sh)$">
+  Require all denied
+</FilesMatch>

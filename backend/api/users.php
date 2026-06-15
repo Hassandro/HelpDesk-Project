@@ -44,10 +44,10 @@ if ($method === 'GET') {
 // CREATE USER (admin only)
 if ($method === 'POST') {
     $data     = json_decode(file_get_contents("php://input"), true);
-    $name     = $data['name'];
-    $email    = $data['email'];
-    $password = $data['password'];
-    $roleID   = $data['roleID'];
+    $name     = mysqli_real_escape_string($conn, $data['name']);
+    $email    = mysqli_real_escape_string($conn, $data['email']);
+    $password = password_hash($data['password'], PASSWORD_DEFAULT);
+    $roleID   = (int)$data['roleID'];
 
     $query = "INSERT INTO Users (Name, Email, Password, RoleID, IsActive)
               VALUES ('$name', '$email', '$password', '$roleID', 1)";

@@ -1,2 +1,14 @@
 node_modules/
 frontend/node_modules/
+frontend/build/
+
+# Local editor/agent config, not part of the app
+.claude/
+
+# Personal deliverables, not part of the app
+HelpDesk_Project_Report.docx
+
+# Uploaded attachment files (keep the folder + its guards)
+backend/uploads/*
+!backend/uploads/.htaccess
+!backend/uploads/.gitkeep

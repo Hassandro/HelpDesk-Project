@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
+const TEST_ACCOUNTS = [
+  { label: 'Admin',    email: 'admin@helpdesk.com',       password: 'admin123' },
+  { label: 'Manager',  email: 'testmanager@helpdesk.com', password: 'manager123' },
+  { label: 'IT Agent', email: 'testagent@helpdesk.com',    password: 'agent123' },
+  { label: 'Employee', email: 'testemployee@helpdesk.com', password: 'employee123' },
+];
+
 function Login() {
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
@@ -15,10 +22,15 @@ function Login() {
     if (token && user.role) {
       if (user.role === 'admin')    navigate('/admin/dashboard');
       if (user.role === 'manager')  navigate('/manager/dashboard');
+      if (user.role === 'it_agent') navigate('/agent/dashboard');
       if (user.role === 'employee') navigate('/employee/dashboard');
-      if (user.role === 'customer') navigate('/customer/dashboard');
     }
   }, []);
+
+  const fillTestAccount = (account) => {
+    setEmail(account.email);
+    setPassword(account.password);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,8 +42,8 @@ function Login() {
         const role = res.data.user.role;
         if (role === 'admin')    navigate('/admin/dashboard');
         if (role === 'manager')  navigate('/manager/dashboard');
+        if (role === 'it_agent') navigate('/agent/dashboard');
         if (role === 'employee') navigate('/employee/dashboard');
-        if (role === 'customer') navigate('/customer/dashboard');
       } else {
         setError(res.data.message);
       }
@@ -64,6 +76,20 @@ function Login() {
           />
           <button style={styles.button} type="submit">Login</button>
         </form>
+
+        <p style={styles.quickLabel}>Quick login (testing)</p>
+        <div style={styles.quickRow}>
+          {TEST_ACCOUNTS.map(account => (
+            <button
+              key={account.label}
+              type="button"
+              style={styles.quickBtn}
+              onClick={() => fillTestAccount(account)}
+            >
+              {account.label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -75,7 +101,10 @@ const styles = {
   title:     { textAlign: 'center', marginBottom: '24px', color: '#333' },
   input:     { width: '100%', padding: '10px', marginBottom: '16px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '14px', boxSizing: 'border-box' },
   button:    { width: '100%', padding: '10px', backgroundColor: '#4f46e5', color: 'white', border: 'none', borderRadius: '4px', fontSize: '16px', cursor: 'pointer' },
-  error:     { color: 'red', marginBottom: '12px', fontSize: '13px' }
+  error:     { color: 'red', marginBottom: '12px', fontSize: '13px' },
+  quickLabel:{ textAlign: 'center', color: '#9ca3af', fontSize: '12px', margin: '20px 0 8px' },
+  quickRow:  { display: 'flex', gap: '8px' },
+  quickBtn:  { flex: 1, padding: '8px 4px', backgroundColor: '#e5e7eb', color: '#374151', border: 'none', borderRadius: '4px', fontSize: '12px', cursor: 'pointer' },
 };
 
 export default Login;

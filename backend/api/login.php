@@ -12,18 +12,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once __DIR__ . '/../config/db.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
-$email = $data['email'];
+$email = mysqli_real_escape_string($conn, $data['email']);
 $password = $data['password'];
 
-$query = "SELECT u.ID, u.Name, u.Email, u.IsActive, r.RoleName
+$query = "SELECT u.ID, u.Name, u.Email, u.Password, u.IsActive, r.RoleName
           FROM Users u
           JOIN Roles r ON u.RoleID = r.ID
-          WHERE u.Email = '$email' AND u.Password = '$password'";
+          WHERE u.Email = '$email'";
 
 $result = mysqli_query($conn, $query);
 
-if (mysqli_num_rows($result) === 1) {
-    $user = mysqli_fetch_assoc($result);
+$user = mysqli_num_rows($result) === 1 ? mysqli_fetch_assoc($result) : null;
+
+if ($user && password_verify($password, $user['Password'])) {
 
     if (!$user['IsActive']) {
         echo json_encode(["success" => false, "message" => "Your account has been deactivated. Please contact the administrator."]);
