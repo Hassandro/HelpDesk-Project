@@ -23,6 +23,7 @@ function EmployeeDashboard() {
   const [form, setForm]               = useState(EMPTY_FORM);
   const [editingID, setEditingID]     = useState(null); // null = create, number = edit
   const [filter, setFilter]           = useState('all');
+  const [darkMode, setDarkMode]       = useState(false);
   const [detailTicket, setDetail]     = useState(null);
   const [activity, setActivity]       = useState([]);
   const [comments, setComments]       = useState([]);
@@ -154,12 +155,14 @@ function EmployeeDashboard() {
   };
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, backgroundColor: darkMode ? '#0f172a' : '#f0f2f5' }}>
       <Sidebar
         items={sidebarItems}
         activeKey={filter}
         onSelect={handleSidebar}
         contact={{ label: 'Contact Manager', email: 'testmanager@helpdesk.com' }}
+        darkMode={darkMode}
+        onToggleDark={() => setDarkMode(d => !d)}
       />
 
       <div style={styles.container}>
