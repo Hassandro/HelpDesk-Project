@@ -24,7 +24,8 @@ function AnalyticsPanel({ userID, role }) {
   if (isLoading) return <p style={styles.empty}>Loading analytics...</p>;
   if (!data) return <p style={styles.empty}>Unable to load analytics.</p>;
 
-  const { kpis, statusBreakdown, categoryBreakdown, priorityBreakdown, ticketsOverTime, agentWorkload } = data;
+  const { kpis, statusBreakdown, categoryBreakdown, priorityBreakdown, ticketsOverTime, agentWorkload, userStats } = data;
+  const isAdmin = role === 'admin' || role === 'manager';
 
   return (
     <div>
@@ -121,6 +122,46 @@ function AnalyticsPanel({ userID, role }) {
           </div>
         )}
       </div>
+
+      {isAdmin && userStats && userStats.length > 0 && (
+        <div style={styles.userStatsSection}>
+          <h3 style={styles.sectionTitle}>Per-User Breakdown</h3>
+
+          {['it_agent', 'employee'].map(r => {
+            const group = userStats.filter(u => u.role === r);
+            if (!group.length) return null;
+            return (
+              <div key={r} style={{ marginBottom: '24px' }}>
+                <h4 style={styles.groupTitle}>{r === 'it_agent' ? 'IT Agents' : 'Employees'}</h4>
+                <div style={styles.tableWrap}>
+                  <table style={styles.table}>
+                    <thead>
+                      <tr>
+                        {['Name', 'Total', 'Open', 'In Progress', 'Resolved', 'Closed', 'Hours Logged'].map(h => (
+                          <th key={h} style={styles.th}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {group.map((u, i) => (
+                        <tr key={u.id} style={{ backgroundColor: i % 2 === 0 ? '#f9fafb' : 'white' }}>
+                          <td style={{ ...styles.td, fontWeight: '600' }}>{u.name}</td>
+                          <td style={{ ...styles.td, ...styles.tdCenter }}>{u.total}</td>
+                          <td style={{ ...styles.td, ...styles.tdCenter, color: '#3b82f6' }}>{u.open}</td>
+                          <td style={{ ...styles.td, ...styles.tdCenter, color: '#f59e0b' }}>{u.in_progress}</td>
+                          <td style={{ ...styles.td, ...styles.tdCenter, color: '#10b981' }}>{u.resolved}</td>
+                          <td style={{ ...styles.td, ...styles.tdCenter, color: '#6b7280' }}>{u.closed}</td>
+                          <td style={{ ...styles.td, ...styles.tdCenter, color: '#0ea5e9' }}>{u.hoursLogged}h</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -133,7 +174,15 @@ const styles = {
   chartGrid:  { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' },
   chartCard:  { border: '1px solid #e5e7eb', borderRadius: '8px', padding: '16px' },
   chartTitle: { margin: '0 0 8px', fontSize: '14px', color: '#374151' },
-  empty:      { color: '#9ca3af', fontSize: '13px' },
+  empty:           { color: '#9ca3af', fontSize: '13px' },
+  userStatsSection:{ marginTop: '32px' },
+  sectionTitle:    { fontSize: '16px', fontWeight: '700', color: '#111827', marginBottom: '16px' },
+  groupTitle:      { fontSize: '14px', fontWeight: '600', color: '#374151', marginBottom: '8px' },
+  tableWrap:       { overflowX: 'auto', borderRadius: '8px', border: '1px solid #e5e7eb' },
+  table:           { width: '100%', borderCollapse: 'collapse', fontSize: '13px' },
+  th:              { padding: '10px 14px', textAlign: 'left', backgroundColor: '#f3f4f6', color: '#6b7280', fontWeight: '600', fontSize: '12px', textTransform: 'uppercase', letterSpacing: '0.05em', borderBottom: '1px solid #e5e7eb' },
+  td:              { padding: '10px 14px', borderBottom: '1px solid #f3f4f6', color: '#374151' },
+  tdCenter:        { textAlign: 'center' },
 };
 
 export default AnalyticsPanel;

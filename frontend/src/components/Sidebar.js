@@ -4,7 +4,27 @@ import { useNavigate } from 'react-router-dom';
 // Collapsible control panel shared by all dashboards.
 // items:   [{ key, label, icon, count? }] — count shows as a badge when provided
 // contact: { label, email } — mailto link shown above Logout
-function Sidebar({ items, activeKey, onSelect, contact }) {
+const MoonIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+  </svg>
+);
+
+const SunIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="5"/>
+    <line x1="12" y1="1" x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+    <line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+  </svg>
+);
+
+function Sidebar({ items, activeKey, onSelect, contact, darkMode, onToggleDark }) {
   const user     = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
   const [open, setOpen] = useState(localStorage.getItem('sidebarOpen') !== '0');
@@ -19,7 +39,18 @@ function Sidebar({ items, activeKey, onSelect, contact }) {
 
   return (
     <div style={{ ...styles.sidebar, width: open ? '240px' : '62px' }}>
-      <button onClick={toggle} style={styles.burger} title={open ? 'Hide panel' : 'Show panel'}>☰</button>
+      <div style={styles.topRow}>
+        <button onClick={toggle} style={styles.burger} title={open ? 'Hide panel' : 'Show panel'}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+        {onToggleDark && (
+          <button onClick={onToggleDark} style={styles.darkBtn} title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}>
+            {darkMode ? <SunIcon /> : <MoonIcon />}
+          </button>
+        )}
+      </div>
 
       <div style={{ ...styles.userCard, justifyContent: open ? 'flex-start' : 'center' }}>
         <div style={styles.avatar}>{user?.name?.charAt(0).toUpperCase() || '?'}</div>
@@ -83,7 +114,9 @@ function Sidebar({ items, activeKey, onSelect, contact }) {
 
 const styles = {
   sidebar:      { backgroundColor: '#1e1b4b', color: 'white', minHeight: '100vh', position: 'sticky', top: 0, display: 'flex', flexDirection: 'column', flexShrink: 0, boxSizing: 'border-box', padding: '14px 10px', transition: 'width 0.2s ease', overflow: 'hidden' },
-  burger:       { background: 'none', border: 'none', color: 'white', fontSize: '20px', cursor: 'pointer', alignSelf: 'flex-start', padding: '6px 10px', borderRadius: '6px' },
+  topRow:       { display: 'flex', alignItems: 'center', gap: '4px', marginBottom: '2px' },
+  burger:       { background: 'none', border: 'none', color: 'white', cursor: 'pointer', padding: '6px 8px', borderRadius: '6px', display: 'flex', alignItems: 'center' },
+  darkBtn:      { background: 'none', border: 'none', color: '#a5b4fc', cursor: 'pointer', padding: '6px 8px', borderRadius: '6px', display: 'flex', alignItems: 'center' },
   userCard:     { display: 'flex', alignItems: 'center', gap: '10px', padding: '14px 6px', borderBottom: '1px solid rgba(255,255,255,0.12)', marginBottom: '12px' },
   avatar:       { width: '38px', height: '38px', borderRadius: '50%', backgroundColor: '#4f46e5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '16px', flexShrink: 0 },
   userName:     { fontSize: '14px', fontWeight: '600', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' },

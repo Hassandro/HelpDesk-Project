@@ -10,9 +10,10 @@ const TEST_ACCOUNTS = [
 ];
 
 function Login() {
-  const [email, setEmail]       = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError]       = useState('');
+  const [email, setEmail]         = useState('');
+  const [password, setPassword]   = useState('');
+  const [showPw, setShowPw]       = useState(false);
+  const [error, setError]         = useState('');
   const navigate                = useNavigate();
 
   // Already logged in? Go straight to dashboard
@@ -66,14 +67,30 @@ function Login() {
             onChange={e => setEmail(e.target.value)}
             required
           />
-          <input
-            style={styles.input}
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
+          <div style={styles.pwWrap}>
+            <input
+              style={styles.pwInput}
+              type={showPw ? 'text' : 'password'}
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+            <button type="button" style={styles.eyeBtn} onClick={() => setShowPw(v => !v)} tabIndex={-1}>
+              {showPw ? (
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
+              ) : (
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              )}
+            </button>
+          </div>
           <button style={styles.button} type="submit">Login</button>
         </form>
 
@@ -100,6 +117,9 @@ const styles = {
   box:       { backgroundColor: 'white', padding: '40px', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', width: '360px' },
   title:     { textAlign: 'center', marginBottom: '24px', color: '#333' },
   input:     { width: '100%', padding: '10px', marginBottom: '16px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '14px', boxSizing: 'border-box' },
+  pwWrap:    { position: 'relative', marginBottom: '16px' },
+  pwInput:   { width: '100%', padding: '10px 38px 10px 10px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '14px', boxSizing: 'border-box' },
+  eyeBtn:    { position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', padding: '0', display: 'flex', alignItems: 'center' },
   button:    { width: '100%', padding: '10px', backgroundColor: '#4f46e5', color: 'white', border: 'none', borderRadius: '4px', fontSize: '16px', cursor: 'pointer' },
   error:     { color: 'red', marginBottom: '12px', fontSize: '13px' },
   quickLabel:{ textAlign: 'center', color: '#9ca3af', fontSize: '12px', margin: '20px 0 8px' },

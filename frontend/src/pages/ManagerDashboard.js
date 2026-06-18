@@ -25,6 +25,7 @@ function ManagerDashboard() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   const [filter, setFilter]           = useState('all');
+  const [darkMode, setDarkMode]       = useState(false);
   const [tickets, setTickets]         = useState([]);
   const [agents, setAgents]           = useState([]);
   const [message, setMessage]         = useState('');
@@ -135,12 +136,14 @@ function ManagerDashboard() {
   const isTicketView = !['audit', 'kb', 'analytics'].includes(filter);
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, backgroundColor: darkMode ? '#0f172a' : '#f0f2f5' }}>
       <Sidebar
         items={sidebarItems}
         activeKey={filter}
         onSelect={setFilter}
         contact={{ label: 'Contact Admin', email: 'admin@helpdesk.com' }}
+        darkMode={darkMode}
+        onToggleDark={() => setDarkMode(d => !d)}
       />
 
       <div style={styles.container}>

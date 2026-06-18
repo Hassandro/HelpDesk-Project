@@ -20,6 +20,7 @@ function AgentDashboard() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   const [view, setView]               = useState('queue'); // 'queue' | 'resolved'
+  const [darkMode, setDarkMode]       = useState(false);
   const [tickets, setTickets]         = useState([]);      // active queue (in_progress)
   const [doneTickets, setDone]        = useState([]);      // resolved / closed history
   const [selectedTicket, setSelected] = useState(null);
@@ -134,12 +135,14 @@ function AgentDashboard() {
   const isTicketView = view === 'queue' || view === 'resolved';
 
   return (
-    <div style={styles.page}>
+    <div style={{ ...styles.page, backgroundColor: darkMode ? '#0f172a' : '#f0f2f5' }}>
       <Sidebar
         items={sidebarItems}
         activeKey={view}
         onSelect={switchView}
         contact={{ label: 'Contact Manager', email: 'testmanager@helpdesk.com' }}
+        darkMode={darkMode}
+        onToggleDark={() => setDarkMode(d => !d)}
       />
 
       <div style={styles.container}>

@@ -16,6 +16,7 @@ function AdminDashboard() {
   const user = JSON.parse(localStorage.getItem('user'));
 
   const [view, setView]           = useState('overview'); // 'overview' | 'users' | 'audit' | 'tickets'
+  const [darkMode, setDarkMode]   = useState(false);
   const [users, setUsers]         = useState([]);
   const [roles, setRoles]         = useState([]);
   const [tickets, setTickets]     = useState([]);
@@ -109,8 +110,8 @@ function AdminDashboard() {
   ];
 
   return (
-    <div style={styles.page}>
-      <Sidebar items={sidebarItems} activeKey={view} onSelect={setView} />
+    <div style={{ ...styles.page, backgroundColor: darkMode ? '#0f172a' : '#f0f2f5' }}>
+      <Sidebar items={sidebarItems} activeKey={view} onSelect={setView} darkMode={darkMode} onToggleDark={() => setDarkMode(d => !d)} />
 
       <div style={styles.container}>
 

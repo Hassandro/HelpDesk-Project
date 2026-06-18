@@ -118,6 +118,66 @@ if ($role === 'admin' || $role === 'manager') {
         $agentWorkload[] = ['name' => $row['name'], 'value' => (int)$row['value']];
     }
     $response['agentWorkload'] = $agentWorkload;
+
+    // Per-user breakdown: IT agents (tickets assigned to them)
+    $userStats = [];
+    $result = mysqli_query($conn, "
+        SELECT u.ID, u.Name, 'it_agent' AS role,
+            COUNT(t.ID)                                                              AS total,
+            SUM(CASE WHEN s.StatusName = 'open'        THEN 1 ELSE 0 END)           AS open_count,
+            SUM(CASE WHEN s.StatusName = 'in_progress' THEN 1 ELSE 0 END)           AS in_progress_count,
+            SUM(CASE WHEN s.StatusName = 'resolved'    THEN 1 ELSE 0 END)           AS resolved_count,
+            SUM(CASE WHEN s.StatusName = 'closed'      THEN 1 ELSE 0 END)           AS closed_count,
+            ROUND(SUM(COALESCE(t.WorkMinutes, 0)) / 60, 1)                          AS hoursLogged
+        FROM Users u
+        JOIN Roles r ON u.RoleID = r.ID AND r.RoleName = 'it_agent'
+        LEFT JOIN Tickets t ON t.AssignedTo = u.ID
+        LEFT JOIN Statuses s ON t.StatusID = s.ID
+        GROUP BY u.ID, u.Name
+        ORDER BY total DESC");
+    while ($row = mysqli_fetch_assoc($result)) {
+        $userStats[] = [
+            'id'               => (int)$row['ID'],
+            'name'             => $row['Name'],
+            'role'             => $row['role'],
+            'total'            => (int)$row['total'],
+            'open'             => (int)$row['open_count'],
+            'in_progress'      => (int)$row['in_progress_count'],
+            'resolved'         => (int)$row['resolved_count'],
+            'closed'           => (int)$row['closed_count'],
+            'hoursLogged'      => (float)$row['hoursLogged'],
+        ];
+    }
+
+    // Per-user breakdown: Employees (tickets they submitted)
+    $result = mysqli_query($conn, "
+        SELECT u.ID, u.Name, 'employee' AS role,
+            COUNT(t.ID)                                                              AS total,
+            SUM(CASE WHEN s.StatusName = 'open'        THEN 1 ELSE 0 END)           AS open_count,
+            SUM(CASE WHEN s.StatusName = 'in_progress' THEN 1 ELSE 0 END)           AS in_progress_count,
+            SUM(CASE WHEN s.StatusName = 'resolved'    THEN 1 ELSE 0 END)           AS resolved_count,
+            SUM(CASE WHEN s.StatusName = 'closed'      THEN 1 ELSE 0 END)           AS closed_count,
+            ROUND(SUM(COALESCE(t.WorkMinutes, 0)) / 60, 1)                          AS hoursLogged
+        FROM Users u
+        JOIN Roles r ON u.RoleID = r.ID AND r.RoleName = 'employee'
+        LEFT JOIN Tickets t ON t.CreatedBy = u.ID
+        LEFT JOIN Statuses s ON t.StatusID = s.ID
+        GROUP BY u.ID, u.Name
+        ORDER BY total DESC");
+    while ($row = mysqli_fetch_assoc($result)) {
+        $userStats[] = [
+            'id'               => (int)$row['ID'],
+            'name'             => $row['Name'],
+            'role'             => $row['role'],
+            'total'            => (int)$row['total'],
+            'open'             => (int)$row['open_count'],
+            'in_progress'      => (int)$row['in_progress_count'],
+            'resolved'         => (int)$row['resolved_count'],
+            'closed'           => (int)$row['closed_count'],
+            'hoursLogged'      => (float)$row['hoursLogged'],
+        ];
+    }
+    $response['userStats'] = $userStats;
 }
 
 echo json_encode($response);
