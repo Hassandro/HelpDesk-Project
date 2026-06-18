@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import { TagIcon, AlertCircleIcon, CircleIcon, ClockIcon, CheckCircleIcon, ArchiveIcon, TrendingUpIcon, BookOpenIcon, FileTextIcon, LockIcon } from '../components/Icons';
 import ActivityTimeline from '../components/ActivityTimeline';
 import Sidebar from '../components/Sidebar';
 import Attachments from '../components/Attachments';
@@ -122,15 +123,15 @@ function ManagerDashboard() {
   ).filter(t => inDateRange(t.CreatedAt, dateRange));
 
   const sidebarItems = [
-    { key: 'all',         label: 'All Tickets',  icon: '🎫', count: total },
-    { key: 'unassigned',  label: 'Unassigned',   icon: '📌', count: unassigned },
-    { key: 'open',        label: 'Open',         icon: '📭', count: openCount },
-    { key: 'in_progress', label: 'In Progress',  icon: '⏳', count: inProgress },
-    { key: 'resolved',    label: 'Resolved',     icon: '✅', count: resolved },
-    { key: 'closed',      label: 'Closed',       icon: '📦', count: closed },
-    { key: 'analytics',   label: 'Analytics',    icon: '📈' },
-    { key: 'kb',          label: 'Knowledge Base', icon: '📚' },
-    { key: 'audit',       label: 'Activity Log', icon: '📜' },
+    { key: 'all',         label: 'All Tickets',  icon: <TagIcon />, count: total },
+    { key: 'unassigned',  label: 'Unassigned',   icon: <AlertCircleIcon />, count: unassigned },
+    { key: 'open',        label: 'Open',         icon: <CircleIcon />, count: openCount },
+    { key: 'in_progress', label: 'In Progress',  icon: <ClockIcon />, count: inProgress },
+    { key: 'resolved',    label: 'Resolved',     icon: <CheckCircleIcon />, count: resolved },
+    { key: 'closed',      label: 'Closed',       icon: <ArchiveIcon />, count: closed },
+    { key: 'analytics',   label: 'Analytics',    icon: <TrendingUpIcon /> },
+    { key: 'kb',          label: 'Knowledge Base', icon: <BookOpenIcon /> },
+    { key: 'audit',       label: 'Activity Log', icon: <FileTextIcon /> },
   ];
 
   const isTicketView = !['audit', 'kb', 'analytics'].includes(filter);
@@ -292,7 +293,7 @@ function ManagerDashboard() {
                     <div key={c.ID} style={c.IsInternal === '1' || c.IsInternal === 1 ? styles.internalComment : styles.comment}>
                       <strong>{c.AuthorName}</strong>
                       <span style={styles.roleTag}> ({roleLabel(c.AuthorRole)})</span>
-                      {(c.IsInternal === '1' || c.IsInternal === 1) && <span style={styles.internalBadge}>🔒 Internal</span>}
+                      {(c.IsInternal === '1' || c.IsInternal === 1) && <span style={styles.internalBadge}><LockIcon size={10} color="white" /> Internal</span>}
                       <span style={styles.commentDate}> · {new Date(c.CreatedAt).toLocaleString()}</span>
                       <p style={{ margin: '6px 0 0' }}>{c.CommentText}</p>
                     </div>

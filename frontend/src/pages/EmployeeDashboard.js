@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ActivityTimeline from '../components/ActivityTimeline';
+import { TagIcon, CircleIcon, ClockIcon, CheckCircleIcon, ArchiveIcon, TrendingUpIcon, BookOpenIcon, PlusCircleIcon } from '../components/Icons';
 import Sidebar from '../components/Sidebar';
 import Attachments from '../components/Attachments';
 import NotificationCenter from '../components/NotificationCenter';
@@ -137,14 +138,14 @@ function EmployeeDashboard() {
     .filter(t => inDateRange(t.CreatedAt, dateRange));
 
   const sidebarItems = [
-    { key: 'all',         label: 'My Tickets',  icon: '🎫', count: tickets.length },
-    { key: 'open',        label: 'Open',        icon: '📭', count: countBy('open') },
-    { key: 'in_progress', label: 'In Progress', icon: '⏳', count: countBy('in_progress') },
-    { key: 'resolved',    label: 'Resolved',    icon: '✅', count: countBy('resolved') },
-    { key: 'closed',      label: 'Closed',      icon: '📦', count: countBy('closed') },
-    { key: 'analytics',   label: 'Analytics',   icon: '📈' },
-    { key: 'kb',          label: 'Knowledge Base', icon: '📚' },
-    { key: 'new',         label: 'New Ticket',  icon: '✚' },
+    { key: 'all',         label: 'My Tickets',  icon: <TagIcon />, count: tickets.length },
+    { key: 'open',        label: 'Open',        icon: <CircleIcon />, count: countBy('open') },
+    { key: 'in_progress', label: 'In Progress', icon: <ClockIcon />, count: countBy('in_progress') },
+    { key: 'resolved',    label: 'Resolved',    icon: <CheckCircleIcon />, count: countBy('resolved') },
+    { key: 'closed',      label: 'Closed',      icon: <ArchiveIcon />, count: countBy('closed') },
+    { key: 'analytics',   label: 'Analytics',   icon: <TrendingUpIcon /> },
+    { key: 'kb',          label: 'Knowledge Base', icon: <BookOpenIcon /> },
+    { key: 'new',         label: 'New Ticket',  icon: <PlusCircleIcon /> },
   ];
 
   const isTicketView = !['kb', 'analytics'].includes(filter);

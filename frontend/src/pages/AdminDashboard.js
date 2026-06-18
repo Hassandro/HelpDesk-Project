@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Sidebar from '../components/Sidebar';
+import { BarChartIcon, UsersIcon, TagIcon, TrendingUpIcon, BookOpenIcon, FileTextIcon } from '../components/Icons';
 import AuditTrail from '../components/AuditTrail';
 import NotificationCenter from '../components/NotificationCenter';
 import KnowledgeBase from '../components/KnowledgeBase';
@@ -101,12 +102,12 @@ function AdminDashboard() {
   const visibleTickets = tickets.filter(t => inDateRange(t.CreatedAt, dateRange));
 
   const sidebarItems = [
-    { key: 'overview',  label: 'Overview',         icon: '📊' },
-    { key: 'users',     label: 'Users',            icon: '👥', count: users.length },
-    { key: 'tickets',   label: 'All Tickets',       icon: '🎫', count: tickets.length },
-    { key: 'analytics', label: 'Analytics',         icon: '📈' },
-    { key: 'kb',        label: 'Knowledge Base',    icon: '📚' },
-    { key: 'audit',     label: 'Audit Trail',       icon: '📜' },
+    { key: 'overview',  label: 'Overview',         icon: <BarChartIcon /> },
+    { key: 'users',     label: 'Users',            icon: <UsersIcon />, count: users.length },
+    { key: 'tickets',   label: 'All Tickets',      icon: <TagIcon />, count: tickets.length },
+    { key: 'analytics', label: 'Analytics',        icon: <TrendingUpIcon /> },
+    { key: 'kb',        label: 'Knowledge Base',   icon: <BookOpenIcon /> },
+    { key: 'audit',     label: 'Audit Trail',      icon: <FileTextIcon /> },
   ];
 
   return (

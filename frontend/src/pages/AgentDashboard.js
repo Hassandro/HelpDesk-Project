@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import ActivityTimeline from '../components/ActivityTimeline';
+import { InboxIcon, CheckCircleIcon, TrendingUpIcon, BookOpenIcon, LockIcon } from '../components/Icons';
 import Sidebar from '../components/Sidebar';
 import Attachments from '../components/Attachments';
 import NotificationCenter from '../components/NotificationCenter';
@@ -124,10 +125,10 @@ function AgentDashboard() {
   };
 
   const sidebarItems = [
-    { key: 'queue',     label: 'My Queue',       icon: '📥', count: tickets.length },
-    { key: 'resolved',  label: 'Resolved by Me', icon: '✅', count: doneTickets.length },
-    { key: 'analytics', label: 'Analytics',      icon: '📈' },
-    { key: 'kb',        label: 'Knowledge Base', icon: '📚' },
+    { key: 'queue',     label: 'My Queue',       icon: <InboxIcon />, count: tickets.length },
+    { key: 'resolved',  label: 'Resolved by Me', icon: <CheckCircleIcon />, count: doneTickets.length },
+    { key: 'analytics', label: 'Analytics',      icon: <TrendingUpIcon /> },
+    { key: 'kb',        label: 'Knowledge Base', icon: <BookOpenIcon /> },
   ];
 
   const list = (view === 'queue' ? tickets : doneTickets)
@@ -242,7 +243,7 @@ function AgentDashboard() {
                     <div key={c.ID} style={c.IsInternal === '1' || c.IsInternal === 1 ? styles.internalComment : styles.comment}>
                       <strong>{c.AuthorName}</strong>
                       <span style={styles.roleTag}> ({roleLabel(c.AuthorRole)})</span>
-                      {(c.IsInternal === '1' || c.IsInternal === 1) && <span style={styles.internalBadge}>🔒 Internal</span>}
+                      {(c.IsInternal === '1' || c.IsInternal === 1) && <span style={styles.internalBadge}><LockIcon size={10} color="white" /> Internal</span>}
                       <span style={styles.commentDate}> · {new Date(c.CreatedAt).toLocaleString()}</span>
                       <p>{c.CommentText}</p>
                     </div>

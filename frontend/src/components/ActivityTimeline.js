@@ -1,16 +1,17 @@
 import React from 'react';
+import { PlusIcon, PencilIcon, UserIcon, RefreshIcon, MessageSquareIcon, LockIcon, PaperclipIcon, CheckIcon, RotateCcwIcon, Trash2Icon } from './Icons';
 
 export const ACTION_META = {
-  created:        { label: 'Created',        color: '#3b82f6', icon: '✚' },
-  updated:        { label: 'Updated',        color: '#8b5cf6', icon: '✎' },
-  assigned:       { label: 'Assigned',       color: '#4f46e5', icon: '👤' },
-  status_changed: { label: 'Status changed', color: '#f59e0b', icon: '⇄' },
-  commented:      { label: 'Comment',        color: '#10b981', icon: '💬' },
-  internal_note:  { label: 'Internal note',  color: '#b45309', icon: '🔒' },
-  attachment:     { label: 'Attachment',     color: '#0891b2', icon: '📎' },
-  closed:         { label: 'Closed',         color: '#6b7280', icon: '✔' },
-  reopened:       { label: 'Reopened',       color: '#ef4444', icon: '↩' },
-  deleted:        { label: 'Deleted',        color: '#ef4444', icon: '🗑' },
+  created:        { label: 'Created',        color: '#3b82f6', icon: <PlusIcon size={13} /> },
+  updated:        { label: 'Updated',        color: '#8b5cf6', icon: <PencilIcon size={13} /> },
+  assigned:       { label: 'Assigned',       color: '#4f46e5', icon: <UserIcon size={13} /> },
+  status_changed: { label: 'Status changed', color: '#f59e0b', icon: <RefreshIcon size={13} /> },
+  commented:      { label: 'Comment',        color: '#10b981', icon: <MessageSquareIcon size={13} /> },
+  internal_note:  { label: 'Internal note',  color: '#b45309', icon: <LockIcon size={13} /> },
+  attachment:     { label: 'Attachment',     color: '#0891b2', icon: <PaperclipIcon size={13} /> },
+  closed:         { label: 'Closed',         color: '#6b7280', icon: <CheckIcon size={13} /> },
+  reopened:       { label: 'Reopened',       color: '#ef4444', icon: <RotateCcwIcon size={13} /> },
+  deleted:        { label: 'Deleted',        color: '#ef4444', icon: <Trash2Icon size={13} /> },
 };
 
 // Vertical status timeline for one ticket's activity logs.
@@ -34,7 +35,7 @@ function ActivityTimeline({ logs, hideInternal }) {
             </div>
             <div style={styles.body}>
               <div>
-                <span style={{ ...styles.action, color: meta.color }}>{meta.icon} {meta.label}</span>
+                <span style={{ ...styles.action, color: meta.color, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>{meta.icon} {meta.label}</span>
                 <span style={styles.who}> by {log.UserName}</span>
                 <span style={styles.when}> · {new Date(log.Timestamp).toLocaleString()}</span>
               </div>

@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { UserIcon, RefreshIcon, PaperclipIcon, BellIcon } from './Icons';
 
 const API = 'http://localhost/api/notifications.php';
 
 const TYPE_META = {
-  assigned:       { icon: '👤', color: '#4f46e5' },
-  status_changed: { icon: '⇄',  color: '#f59e0b' },
-  attachment:     { icon: '📎', color: '#0891b2' },
-  general:        { icon: '🔔', color: '#6b7280' },
+  assigned:       { icon: <UserIcon size={15} />,       color: '#4f46e5' },
+  status_changed: { icon: <RefreshIcon size={15} />,    color: '#f59e0b' },
+  attachment:     { icon: <PaperclipIcon size={15} />,  color: '#0891b2' },
+  general:        { icon: <BellIcon size={15} />,       color: '#6b7280' },
 };
 
 const timeAgo = (dateStr) => {
@@ -65,7 +66,7 @@ function NotificationCenter({ userID }) {
   return (
     <div style={styles.wrap} ref={wrapRef}>
       <button onClick={() => setOpen(!open)} style={styles.bell} title="Notifications">
-        🔔
+        <BellIcon size={20} />
         {unreadCount > 0 && <span style={styles.badge}>{unreadCount > 9 ? '9+' : unreadCount}</span>}
       </button>
 
@@ -110,7 +111,7 @@ function NotificationCenter({ userID }) {
 
 const styles = {
   wrap:          { position: 'relative', display: 'inline-block' },
-  bell:          { position: 'relative', background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', padding: '6px' },
+  bell:          { position: 'relative', background: 'none', border: 'none', cursor: 'pointer', padding: '6px', display: 'flex', alignItems: 'center', color: '#374151' },
   badge:         { position: 'absolute', top: '0', right: '0', backgroundColor: '#ef4444', color: 'white', borderRadius: '10px', fontSize: '10px', fontWeight: '700', padding: '1px 5px', minWidth: '16px', lineHeight: '14px' },
   dropdown:      { position: 'absolute', top: '100%', right: 0, marginTop: '8px', width: '320px', backgroundColor: 'white', border: '1px solid #e5e7eb', borderRadius: '8px', boxShadow: '0 4px 16px rgba(0,0,0,0.12)', zIndex: 100, display: 'flex', flexDirection: 'column', overflow: 'hidden' },
   dropdownHeader:{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderBottom: '1px solid #e5e7eb' },

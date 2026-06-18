@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MailIcon, LogOutIcon } from './Icons';
 
 // Collapsible control panel shared by all dashboards.
 // items:   [{ key, label, icon, count? }] — count shows as a badge when provided
@@ -45,7 +46,7 @@ function Sidebar({ items, activeKey, onSelect, contact, darkMode, onToggleDark }
             <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
         </button>
-        {onToggleDark && (
+        {onToggleDark && open && (
           <button onClick={onToggleDark} style={styles.darkBtn} title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}>
             {darkMode ? <SunIcon /> : <MoonIcon />}
           </button>
@@ -90,7 +91,7 @@ function Sidebar({ items, activeKey, onSelect, contact, darkMode, onToggleDark }
             style={{ ...styles.contact, justifyContent: open ? 'flex-start' : 'center' }}
             title={`${contact.label}: ${contact.email}`}
           >
-            <span style={styles.itemIcon}>✉️</span>
+            <span style={styles.itemIcon}><MailIcon size={16} /></span>
             {open && (
               <span style={styles.contactText}>
                 <span style={styles.contactLabel}>{contact.label}</span>
@@ -104,7 +105,7 @@ function Sidebar({ items, activeKey, onSelect, contact, darkMode, onToggleDark }
           style={{ ...styles.logout, justifyContent: open ? 'flex-start' : 'center' }}
           title="Logout"
         >
-          <span style={styles.itemIcon}>⏻</span>
+          <span style={styles.itemIcon}><LogOutIcon size={16} /></span>
           {open && <span>Logout</span>}
         </button>
       </div>
