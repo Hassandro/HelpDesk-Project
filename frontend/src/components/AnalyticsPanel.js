@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import {
   PieChart, Pie, Cell, BarChart, Bar, LineChart, Line,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -13,6 +15,18 @@ const PRIORITY_COLORS = { Low: '#22c55e', Medium: '#f59e0b', High: '#ef4444', Ur
 const CATEGORY_COLORS = ['#4f46e5', '#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#7c3aed', '#ec4899', '#6b7280'];
 
 function AnalyticsPanel({ userID, role }) {
+  const panelRef = useRef(null);
+
+  const exportPDF = async () => {
+    const canvas = await html2canvas(panelRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+    const imgData = canvas.toDataURL('image/png');
+    const pdfW = 210;
+    const pdfH = (canvas.height / canvas.width) * pdfW;
+    const pdf = new jsPDF({ unit: 'mm', format: [pdfW, pdfH] });
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfW, pdfH);
+    pdf.save(`analytics-report-${new Date().toISOString().slice(0, 10)}.pdf`);
+  };
+
   const { data, isLoading } = useQuery({
     queryKey: ['stats', userID, role],
     queryFn: async () => {
@@ -29,6 +43,19 @@ function AnalyticsPanel({ userID, role }) {
 
   return (
     <div>
+      {isAdmin && (
+        <div style={styles.exportRow}>
+          <button onClick={exportPDF} style={styles.exportBtn}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Export PDF
+          </button>
+        </div>
+      )}
+      <div ref={panelRef}>
       <div style={styles.kpiRow}>
         {kpis.map(k => (
           <div key={k.label} style={{ ...styles.statCard, borderColor: k.color }}>
@@ -162,11 +189,14 @@ function AnalyticsPanel({ userID, role }) {
           })}
         </div>
       )}
+      </div>
     </div>
   );
 }
 
 const styles = {
+  exportRow:  { display: 'flex', justifyContent: 'flex-end', marginBottom: '16px' },
+  exportBtn:  { display: 'flex', alignItems: 'center', padding: '8px 16px', backgroundColor: '#4f46e5', color: 'white', border: 'none', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', fontWeight: '500' },
   kpiRow:     { display: 'flex', gap: '16px', marginBottom: '24px', flexWrap: 'wrap' },
   statCard:   { flex: '1 1 140px', border: '2px solid', borderRadius: '8px', padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center' },
   statNum:    { fontSize: '28px', fontWeight: 'bold' },
