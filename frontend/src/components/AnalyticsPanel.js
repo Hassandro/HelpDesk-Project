@@ -19,11 +19,33 @@ function AnalyticsPanel({ userID, role }) {
 
   const exportPDF = async () => {
     const canvas = await html2canvas(panelRef.current, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
-    const imgData = canvas.toDataURL('image/png');
-    const pdfW = 210;
-    const pdfH = (canvas.height / canvas.width) * pdfW;
+    const margin = 15;
+    const pdfW = 297; // A4 landscape width in mm
+    const imgW = pdfW - margin * 2;
+    const imgH = (canvas.height / canvas.width) * imgW;
+    const headerH = 28;
+    const pdfH = headerH + imgH + margin * 2;
+
     const pdf = new jsPDF({ unit: 'mm', format: [pdfW, pdfH] });
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfW, pdfH);
+
+    // Title
+    pdf.setFontSize(20);
+    pdf.setTextColor(31, 41, 55);
+    pdf.text('Analytics Report', margin, margin + 10);
+
+    // Subtitle info
+    pdf.setFontSize(10);
+    pdf.setTextColor(107, 114, 128);
+    const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+    pdf.text(`Generated on ${today}  ·  Role: ${role.replace('_', ' ').toUpperCase()}`, margin, margin + 18);
+
+    // Divider
+    pdf.setDrawColor(209, 213, 219);
+    pdf.line(margin, margin + 22, pdfW - margin, margin + 22);
+
+    // Charts image
+    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margin, margin + headerH, imgW, imgH);
+
     pdf.save(`analytics-report-${new Date().toISOString().slice(0, 10)}.pdf`);
   };
 

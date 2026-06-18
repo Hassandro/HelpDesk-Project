@@ -349,9 +349,12 @@ function ManagerDashboard() {
 // Lets the manager publish a closed ticket's resolution as a searchable KB
 // article. Keyed by ticket ID from the parent so defaultValues reset per ticket.
 function PublishToKBForm({ ticket, userID, onDone }) {
-  const { register, handleSubmit, formState: { isSubmitting } } = useForm({
+  const [lastPublished, setLastPublished] = useState('');
+  const { register, handleSubmit, formState: { isSubmitting }, watch } = useForm({
     defaultValues: { title: ticket.Title, solution: '' },
   });
+  const solutionValue = watch('solution');
+  const isUnchanged = solutionValue.trim() === lastPublished.trim();
 
   const onSubmit = async (data) => {
     const res = await axios.post('http://localhost/api/knowledgebase.php', {
@@ -360,6 +363,7 @@ function PublishToKBForm({ ticket, userID, onDone }) {
       solution: data.solution,
       userID,
     });
+    if (res.data.success) setLastPublished(data.solution);
     onDone(res.data.message);
   };
 
@@ -371,7 +375,11 @@ function PublishToKBForm({ ticket, userID, onDone }) {
         placeholder="Describe the solution that resolved this ticket..."
         {...register('solution', { required: true })}
       />
-      <button type="submit" style={styles.submitBtn} disabled={isSubmitting}>
+      <button
+        type="submit"
+        style={{ ...styles.submitBtn, opacity: (isSubmitting || isUnchanged) ? 0.5 : 1, cursor: (isSubmitting || isUnchanged) ? 'not-allowed' : 'pointer' }}
+        disabled={isSubmitting || isUnchanged}
+      >
         {isSubmitting ? 'Publishing...' : 'Publish to Knowledge Base'}
       </button>
     </form>
